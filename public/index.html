@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de UUID</title>
+    <script src="https://code.jquery.com/jquery-3.7.0.min.js" 
+            integrity="sha256-2Pmvv0kuTBOenSvLm6bvfBSSHrUJ+3A7x6P5Ebd07/g=" 
+            crossorigin="anonymous"></script>
+   
+    
+</head>
+<body>
+    <div style="text-align: center">
+        <h1>
+            Identificador Único Universal  (uuid)
+        </h1>
+        <br>
+        <button onclick="getuuid()">Generar</button>
+        <h4 id="result"></h4>
+        <br>
+        <button onclick="fetchUuid()">Generar Fetch</button>
+        <h4 id="resultF"></h4>
+
+    </div>
+</body>
+
+<script>
+    const url = 'http://127.0.0.1:8080/api/get-uuid';
+    function getuuid() {
+        $.ajax({
+            url: url,
+            type: 'GET',
+            success: function( res ) {
+                console.log(res);
+                $('#result').html(res);
+            },
+            error: function( xhr, ajaxOptions, thrownError ){
+                $('#result').html(`Error: ${xhr.status} ${thrownError}`);
+            }
+        })
+    };
+
+    const fetchUuid = () => {
+        fetch(url)
+        .then( res => res.text())
+        .then( data =>{
+            const h4 = document.getElementById('resultF');
+            h4.innerText = data;
+        })
+        .catch(function(error) {
+            console.log('Hubo un problema con la petición Fetch:' + error.message);
+        });
+    };
+</script>
+</html>
