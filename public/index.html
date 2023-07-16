@@ -21,15 +21,17 @@
         <br>
         <button onclick="fetchUuid()">Generar Fetch</button>
         <h4 id="resultF"></h4>
+        <br>
+        <button onclick="descarga()">Descargar SQLite</button>
 
     </div>
 </body>
 
 <script>
-    const url = 'http://127.0.0.1:8080/api/get-uuid';
+    const url = 'http://127.0.0.1:8080/api/';
     function getuuid() {
         $.ajax({
-            url: url,
+            url: url+'get-uuid',
             type: 'GET',
             success: function( res ) {
                 console.log(res);
@@ -42,7 +44,7 @@
     };
 
     const fetchUuid = () => {
-        fetch(url)
+        fetch(url+'get-uuid')
         .then( res => res.text())
         .then( data =>{
             const h4 = document.getElementById('resultF');
@@ -52,5 +54,49 @@
             console.log('Hubo un problema con la petición Fetch:' + error.message);
         });
     };
+
+    const descarga = () => {
+        const api=url+'downloadDb';
+        fetch(api)
+        .then( res => res.blob())
+        .then( blob =>{
+            const fecha = new Date().toJSON().slice(0,10).replaceAll('-', '').replaceAll('/','');
+            const filename = `./db/${fecha}.db3`;
+            if (typeof window.navigator.msSaveBlob !== 'undefined') {
+                // IE doesn't allow using a blob object directly as link href.
+                // Workaround for "HTML7007: One or more blob URLs were
+                // revoked by closing the blob for which they were created.
+                // These URLs will no longer resolve as the data backing
+                // the URL has been freed."
+                window.navigator.msSaveBlob(blob, filename);
+                return;
+            }
+            // Other browsers
+            // Create a link pointing to the ObjectURL containing the blob
+            const blobURL = window.URL.createObjectURL(blob);
+            const tempLink = document.createElement('a');
+            tempLink.style.display = 'none';
+            tempLink.href = blobURL;
+            tempLink.setAttribute('download', filename);
+            // Safari thinks _blank anchor are pop ups. We only want to set _blank
+            // target if the browser does not support the HTML5 download attribute.
+            // This allows you to download files in desktop safari if pop up blocking
+            // is enabled.
+            if (typeof tempLink.download === 'undefined') {
+                tempLink.setAttribute('target', '_blank');
+            }
+            document.body.appendChild(tempLink);
+            tempLink.click();
+            document.body.removeChild(tempLink);
+            setTimeout(() => {
+                // For Firefox it is necessary to delay revoking the ObjectURL
+                window.URL.revokeObjectURL(blobURL);
+            }, 100);
+
+        })
+        .catch(function(error) {
+            console.log('Hubo un problema con la petición Fetch:' + error.message);
+        });
+    }
 </script>
 </html>
