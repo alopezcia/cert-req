@@ -39,7 +39,7 @@ if( !fs.existsSync(dbName)){
             'CREATE TABLE IF NOT EXISTS uuids('+
                 'id INTEGER PRIMARY KEY AUTOINCREMENT, '+
                 'uuid text NOT NULL, '+
-                'Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP)';
+                'registro DATETIME DEFAULT CURRENT_TIMESTAMP)';
         db.run(createTable);
         db.close();
     });
