@@ -2,6 +2,8 @@ const express = require('express');
 const http    = require('http');
 const helmet  = require('helmet');
 var compression = require('compression');
+const cors = require('cors');
+
 require('dotenv').config();
 const { v4: uuidv4 } = require('uuid');
 const sqlite3 = require('sqlite3').verbose();
@@ -50,6 +52,7 @@ const app = express();
 app.use( helmet({contentSecurityPolicy: false} ));
 // app.use( helmet());
 app.use(compression());
+app.use(cors());
 app.use(express.static('./public'));
 
 const serverHttp = http.createServer(app);
