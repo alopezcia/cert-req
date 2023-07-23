@@ -59,7 +59,6 @@ app.use( helmet({contentSecurityPolicy: false} ));
 // app.use( helmet());
 app.use(compression());
 app.use(cors());
-app.use(express.static('./public'));
 
 const serverHttp = http.createServer(app);
 const serverHttps = https.createServer(httpsServerOptions, app);
@@ -67,7 +66,14 @@ const serverHttps = https.createServer(httpsServerOptions, app);
 serverHttp.listen( process.env.HTTP_PORT, process.env.IP );
 serverHttps.listen( process.env.HTTPS_PORT, process.env.IP );
 
-// app.get('/', (req, res) => { res.send('Hola Mundo')});
+app.use( (req, res, next ) => {
+    if( req.secure ) 
+        next();
+    else 
+        res.redirect(`https://${req.headers.host}${req.url}`);
+});
+
+app.use(express.static('./public'));
 
 app.get('/api/get-uuid', (req, res) => { 
     const uuid = uuidv4();
