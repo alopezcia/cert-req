@@ -1,9 +1,9 @@
 const express = require('express');
 const http    = require('http');
+const https   = require('https');
 const helmet  = require('helmet');
 var compression = require('compression');
 const cors = require('cors');
-
 require('dotenv').config();
 const { v4: uuidv4 } = require('uuid');
 const sqlite3 = require('sqlite3').verbose();
@@ -14,8 +14,14 @@ const fecha = new Date().toJSON().slice(0,10).replaceAll('-', '').replaceAll('/'
 const dbName = `./db/${fecha}.db3`;
 const allDbZip = './db/allDbZip.zip';
 
+
+const httpsServerOptions = {
+    key:  fs.readFileSync(process.env.KEY_PATH),
+    cert: fs.readFileSync(process.env.CERT_PATH)
+};
+
 // Borrar el zip de todas las db para volver a crearlo
-if( fs.existsSync(allDbZip) ){
+if( fs.existsSync(allDbZip) ){ 
     try{
         fs.unlinkSync(allDbZip);
     }catch( err ){
@@ -56,8 +62,10 @@ app.use(cors());
 app.use(express.static('./public'));
 
 const serverHttp = http.createServer(app);
+const serverHttps = https.createServer(httpsServerOptions, app);
 
 serverHttp.listen( process.env.HTTP_PORT, process.env.IP );
+serverHttps.listen( process.env.HTTPS_PORT, process.env.IP );
 
 // app.get('/', (req, res) => { res.send('Hola Mundo')});
 
@@ -95,4 +103,4 @@ app.get('*', (req, res) => {
     res.status(404).send('Error 404 - Recurso no encontrado');
 });
 
-console.log(`Servidor arrancado en puerto ${process.env.HTTP_PORT}` );
+console.log(`Servidor arrancado en puertos ${process.env.HTTPS_PORT} y ${process.env.HTTP_PORT}` );
