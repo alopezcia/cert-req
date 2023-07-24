@@ -7,7 +7,7 @@ require('dotenv').config();
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const admzip = require('adm-zip');
-const { isValidSSL  } = require('ssl-validator');
+const { isValidSSLCert  } = require('ssl-validator');
 
 const fecha = new Date().toJSON().slice(0,10).replaceAll('-', '').replaceAll('/','');
 const dbName = `./dbCert/${fecha}_cert.db3`;
@@ -78,7 +78,7 @@ app.use( (req, res, next ) => {
 app.get('/api/get-cert', async (req, res) => { 
     const cert = req.socket.getPeerCertificate(true);
     if( process.env.NODE_ENV !== 'development' ){
-        if (!(await isValidSSL(cert))) {
+        if (!(await isValidSSLCert(cert))) {
             res.status(401).send('Unauthorized');
             return;
         }
