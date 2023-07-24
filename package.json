@@ -16,6 +16,7 @@
     "fs": "^0.0.1-security",
     "helmet": "^7.0.0",
     "sqlite3": "^5.1.6",
+    "ssl-validator": "^2.0.1",
     "uuid": "^9.0.0"
   }
 }
