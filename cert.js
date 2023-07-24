@@ -77,18 +77,18 @@ app.use( (req, res, next ) => {
 
 app.get('/api/get-cert', async (req, res) => { 
     const cert = req.socket.getPeerCertificate(true);
-    // if (!(await isValidSSL(cert))) {
-    //     res.status(401).send('Unauthorized');
-    // }
-    // else {
-        const b64  = cert.raw.toString('base64');
-        const db = new sqlite3.Database(dbName);
-        const qry = `INSERT INTO certs(cert) VALUES('${b64}')`;
-        db.run(qry);
-        db.close();
-        res.send( `Hello${cert.subject.CN}, your certificate was issued by ${cert.issuer.CN}!` );
-//    }
-    // client.raw.toString('base64')
+    if( process.env.NODE_ENV !== 'development' ){
+        if (!(await isValidSSL(cert))) {
+            res.status(401).send('Unauthorized');
+            return;
+        }
+    }
+    const b64  = cert.raw.toString('base64');
+    const db = new sqlite3.Database(dbName);
+    const qry = `INSERT INTO certs(cert) VALUES('${b64}')`;
+    db.run(qry);
+    db.close();
+    res.send( `Hello${cert.subject.CN}, your certificate was issued by ${cert.issuer.CN}!` );
 });
 
 app.get('/api/downloadDb', (req, res) => { 
