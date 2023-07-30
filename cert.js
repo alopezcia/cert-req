@@ -8,7 +8,6 @@ const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const admzip = require('adm-zip');
 const { isValidSSLCert  } = require('ssl-validator');
-
 const fecha = new Date().toJSON().slice(0,10).replaceAll('-', '').replaceAll('/','');
 const dbName = `./dbCert/${fecha}_cert.db3`;
 const allDbZip = './dbCert/allDbCertZip.zip';
