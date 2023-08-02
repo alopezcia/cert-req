@@ -7,7 +7,6 @@ require('dotenv').config();
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const admzip = require('adm-zip');
-const { isValidSSLCert  } = require('ssl-validator');
 const fecha = new Date().toJSON().slice(0,10).replaceAll('-', '').replaceAll('/','');
 const dbName = `./dbCert/${fecha}_cert.db3`;
 const allDbZip = './dbCert/allDbCertZip.zip';
@@ -60,28 +59,34 @@ app.use( helmet({contentSecurityPolicy: false} ));
 app.use(compression());
 app.use(cors());
 
+// Middleware to check user certificate
+const checkCertificate = (req, res, next) => {
+    if (req.client.authorized) {
+        // Certificate is valid
+        next();
+      } else {
+        // Certificate is invalid or not provided
+        res.status(403).send('Access forbidden. Invalid or missing certificate.');
+      }  
+};
+// Use the middleware to check certificate on every request
+app.use(checkCertificate);
+
 const serverHttps = https.createServer(httpsServerOptions, app);
 
 serverHttps.listen( process.env.API_HTTPS_PORT, process.env.IP );
 
-app.use( (req, res, next ) => {
-    if( req.client.authorized ) 
-        next();
-    else {
-        res.status(401).send('Unauthorized');
-    }
-});
-
+// app.use( (req, res, next ) => {
+//     if( req.client.authorized ) 
+//         next();
+//     else {
+//         res.status(401).send('Unauthorized');
+//     }
+// });
 
 
 app.get('/api/get-cert', async (req, res) => { 
     const cert = req.socket.getPeerCertificate(true);
-    if( process.env.NODE_ENV !== 'development' ){
-        if (!(await isValidSSLCert(cert))) {
-            res.status(401).send('Unauthorized');
-            return;
-        }
-    }
     const b64  = cert.raw.toString('base64');
     const db = new sqlite3.Database(dbName);
     const qry = `INSERT INTO certs(cert) VALUES('${b64}')`;
