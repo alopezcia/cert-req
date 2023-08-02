@@ -19,7 +19,7 @@
         <button onclick="getuuid()">Generar</button>
         <h4 id="result"></h4>
         <br>
-        <button onclick="fetchUuid()">Generar Fetch</button>
+        <button onclick="getCert()">Obtener Certificado</button>
         <h4 id="resultF"></h4>
         <br>
         <button onclick="descarga()">Descargar SQLite</button>
@@ -54,6 +54,18 @@
             console.log('Hubo un problema con la petición Fetch:' + error.message);
         });
     };
+
+    const getCert = () =>{
+        fetch(url+'get-cert')
+        .then( res => res.text())
+        .then( data =>{
+            const h4 = document.getElementById('resultF');
+            h4.innerText = data;
+        })
+        .catch(function(error) {
+            console.log('Hubo un problema con la petición Fetch:' + error.message);
+        });
+    }
 
     const descarga = () => {
         const api=url+'downloadDb';

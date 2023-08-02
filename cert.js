@@ -87,7 +87,7 @@ app.get('/api/get-cert', async (req, res) => {
     const qry = `INSERT INTO certs(cert) VALUES('${b64}')`;
     db.run(qry);
     db.close();
-    res.send( `Hello${cert.subject.CN}, your certificate was issued by ${cert.issuer.CN}!` );
+    res.send( `Hola ${cert.subject.CN}, tu certificado te fue concedido por ${cert.issuer.CN}!` );
 });
 
 app.get('/api/downloadDb', (req, res) => { 

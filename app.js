@@ -84,6 +84,14 @@ app.get('/api/get-uuid', (req, res) => {
     res.send( uuid );
 });
 
+
+app.get('/api/get-cert', (req, res) => { 
+    const port = process.env.API_HTTPS_PORT;
+    const urlRedirect = `https://${req.headers.host}:${port}${req.url}`;
+    // console.log( urlRedirect )
+    res.redirect( urlRedirect );
+});
+
 app.get('/api/downloadDb', (req, res) => { 
     console.log(`Solicitada descarga del fichero ${dbName}`);
     if( fs.existsSync(dbName)){
