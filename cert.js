@@ -7,6 +7,8 @@ require('dotenv').config();
 const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
 const admzip = require('adm-zip');
+const qr = require("qrcode");
+
 const fecha = new Date().toJSON().slice(0,10).replaceAll('-', '').replaceAll('/','');
 const dbName = `./dbCert/${fecha}_cert.db3`;
 const allDbZip = './dbCert/allDbCertZip.zip';
@@ -94,6 +96,24 @@ app.get('/api/get-cert', async (req, res) => {
     db.close();
     res.send( `Hola ${cert.subject.CN}, tu certificado te fue concedido por ${cert.issuer.CN}!` );
 });
+
+app.get('/api/get-QRCert', async (req, res) => { 
+    const cert = req.socket.getPeerCertificate(true);
+    const {subject, issuer, valid_to, serialNumber } = cert;
+    const toQR = { subject, issuer, valid_to, serialNumber };
+    const b64  = cert.raw.toString('base64');
+    const db = new sqlite3.Database(dbName);
+    const qry = `INSERT INTO certs(cert) VALUES('${b64}')`;
+    db.run(qry);
+    db.close();
+    qr.toDataURL(JSON.stringify(toQR), (err, src) => {
+        if (err) res.send("Error occured");
+      
+        // Let us return the QR code image as our response and set it to be the source used in the webpage
+        res.send( src );
+    });
+});
+
 
 app.get('/api/downloadDb', (req, res) => { 
     console.log(`Solicitada descarga del fichero ${dbName}`);

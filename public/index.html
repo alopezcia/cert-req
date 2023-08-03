@@ -19,8 +19,9 @@
         <button onclick="getuuid()">Generar</button>
         <h4 id="result"></h4>
         <br>
-        <button onclick="getCert()">Obtener Certificado</button>
+        <button onclick="getQR()">Obtener QR Certificado</button>
         <h4 id="resultF"></h4>
+        <img id="qrImage" alt="QR Code Image">
         <br>
         <button onclick="descarga()">Descargar SQLite</button>
 
@@ -66,6 +67,19 @@
             console.log('Hubo un problema con la petición Fetch:' + error.message);
         });
     }
+
+    const getQR = () => {
+        const api=url+'get-QRCert';
+        fetch(api)
+        .then( res => res.text())
+        .then( data =>{
+            const img = document.getElementById('qrImage');
+            img.src = data;
+        })
+        .catch(function(error) {
+            console.log('Hubo un problema con la petición Fetch:' + error.message);
+        });
+    };
 
     const descarga = () => {
         const api=url+'downloadDb';
