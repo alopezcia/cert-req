@@ -8,7 +8,7 @@ const doc = new PDFDocument({
             top: 20,
             bottom: 20,
             left: 20,
-            right: 20
+            right: 40
             }});
 
 // Pipe its output somewhere, like to a file or HTTP response
@@ -66,6 +66,78 @@ doc.image('public/hoja.png', 0, 0, {
 
   // curso escolar
   doc.text('XXXXXXXXXXXXXXXX', 384, 140);
+
+  // nombre del profesor de religión
+  doc.text('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 144, 166);
+
+  // apellidos padre
+  doc.text('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 110, 190);
+
+  // nombre padre
+  doc.text('XXXXXXXXXXXXXXXXXX', 430, 190);
+
+  // telefono padre 
+  doc.text('XXXXXXXXXXXXXXXXXXXXXXXX', 144, 216);
+
+  // dni padre 
+  doc.text('XXXXXXXXXXXXXXXXXXXXXXX', 395, 216);
+
+  // apellidos madre 
+  doc.text('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 115, 242);
+
+  // nombre madre
+  doc.text('XXXXXXXXXXXXXXXXXX', 430, 242);
+
+  // telefono madre 
+  doc.text('XXXXXXXXXXXXXXXXXXXXXXXX', 144, 268);
+
+  // dni madre 
+  doc.text('XXXXXXXXXXXXXXXXXXXXXXX', 395, 268);
+  
+  // dirección
+  doc.text('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 76, 294);
+
+  // codigo postal 
+  doc.text('XXXXXXXXX', 488, 294);
+
+  // email
+  doc.text('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 76, 318);
+
+  // alergias
+  doc.text('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 
+  28, 352);
+
+  // comentiarios
+  doc.text('XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX', 
+  28, 410);
+
+  // si , imagen  
+  doc.text('X', 469, 471);
+  // no , imagen  
+  doc.text('X', 520, 471);
+
+  // si , imagen  
+  doc.text('X', 469, 496);
+  // no , imagen  
+  doc.text('X', 520, 496);
+
+  // si , imagen  
+  doc.text('X', 469, 520);
+  // no , imagen  
+  doc.text('X', 520, 520);
+
+  // si , imagen  
+  doc.text('X', 469, 548);
+  // no , imagen  
+  doc.text('X', 520, 548);
+
+  // ACEPTO  
+  doc.text('X', 44, 600);
+
+  
+  
+
+
 
 // Add another page
 doc
